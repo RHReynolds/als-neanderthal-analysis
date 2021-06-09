@@ -1,0 +1,117 @@
+---
+title: "Heritability analysis of natural selection metrics"
+author: 
+- name: "Regina H. Reynolds"
+  affiliation: UCL
+date: "`r format(Sys.time(), '%d %B %Y')`"
+output: 
+  bookdown::html_document2:
+    figure_caption: yes
+    code_folding: show
+    theme: paper
+    highlight: kate
+    df_print: paged
+    toc: true
+    toc_float: true
+    number_sections: true
+---
+
+```{r setup, include = FALSE}
+
+library(ggplot2) # For plotting
+library(tidyverse) # For tidy manipulation of data
+library(stringr) # For string manipulation
+
+knitr::opts_chunk$set(echo = T, warning = F, message = F)
+
+# Set defaults for ggplots 
+theme_rhr <- theme_set(
+  theme_bw(base_family = "Helvetica",
+           base_size = 10) + 
+  theme(panel.grid.major.x = element_blank(),
+        legend.position = "top",
+        axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
+        axis.title.y = element_text(vjust = 0.6),
+        panel.spacing = unit(0.1, "lines"))
+)
+
+```
+
+> Aim: to test the relationship between ALS-associated SNPs and SNP-based signatures of natural selection.
+<br><br>
+
+# Background
+
+***From Zhongbo's draft paper: ***
+
+The persistence of some Neanderthal alleles in the non-African modern human genome suggests positive selection. Interbreeding of modern humans with Neanderthals may have resulted in survival advantages for adaptation to the non-African environment. In support of this notion, Neanderthal alleles are over-represented in the modern human keratin genes (PMID: [22422974](https://pubmed.ncbi.nlm.nih.gov/22422974/), [24476815](https://pubmed.ncbi.nlm.nih.gov/24476815/)). Similarly, there is evidence that Neanderthal human leucocyte antigen (HLA) haplotypes have introgressed into modern Eurasian and Oceanian populations, helping the offspring of the new migrant population adapt to local pathogens (PMID: [21868630](https://pubmed.ncbi.nlm.nih.gov/21868630/)). Despite these beneficial effects of Neanderthal DNA on early modern Eurasian human populations, a study of the genomes of one thousand present day humans has shown that alleles of Neanderthal derivation are over-represented in autoimmune diseases such as primary biliary cirrhosis and systemic lupus erythematosus  (PMID: [24476815](https://pubmed.ncbi.nlm.nih.gov/24476815/)). This may be because the HLA-encoded complexes differ sufficiently from modern human proteins to induce an immune response. 
+
+Small changes in protein expression or structure could be involved in other diseases too. The evolutionary changes driving brain development and architecture have been crucial in modern humans, and it is therefore possible that small changes in expression or coding sequences resulting from Neanderthal alleles contribute to neurodegeneration. This type of mechanism may be relevant in progressive supranuclear palsy, a neurodegenerative disease in which a specific disease-associated haplotype in the MAPT gene appears to be a Neanderthal sequence (PMID: [16042549](https://pubmed.ncbi.nlm.nih.gov/16042549/)). Such a mechanism could also be implicated in motor neuron degeneration, particularly given the high metabolic and maintenance demands of motor neurons. Furthermore, there is an inflammatory component to ALS pathogenesis (PMID: [23881705](https://pubmed.ncbi.nlm.nih.gov/23881705/), [15652422](https://pubmed.ncbi.nlm.nih.gov/15652422/), [19307024](https://pubmed.ncbi.nlm.nih.gov/19307024/), [15056468](https://pubmed.ncbi.nlm.nih.gov/15056468/)), overlapping with several autoimmune disorders (PMID: [23946298](https://pubmed.ncbi.nlm.nih.gov/23946298/)) and differential HLA antigen expression in ALS patients (PMID: [938267](https://pubmed.ncbi.nlm.nih.gov/938267/), [7073543](https://pubmed.ncbi.nlm.nih.gov/7073543/), [1023469](https://pubmed.ncbi.nlm.nih.gov/1023469/)), all of which could result from Neanderthal sequences. The characteristic functional deficits that define the clinical syndrome of ALS have also been considered in terms of key steps in human motor system and language evolution (PMID: [24273101](https://pubmed.ncbi.nlm.nih.gov/24273101/)).
+
+We therefore set out to investigate whether genetic variations in genomic regions representing high Neanderthal to non-African modern human gene flow are enriched in neurodegenerative diseases, using amylotrophic lateral sclerosis (ALS; medRxiv: [2021.03.12.21253159](https://www.medrxiv.org/content/10.1101/2021.03.12.21253159v1)), Alzheimer's disease (AD; PMID: [30617256](https://pubmed.ncbi.nlm.nih.gov/30617256/)) and Parkinson's disease (PD; PMID: [31701892](https://pubmed.ncbi.nlm.nih.gov/31701892/)) genome-wide association studies (GWASs).
+
+# Methods {.tabset}
+
+## Choosing natural selection metrics
+
+The choice of natural selection metrics was based on a similar analysis performed by Pardiñas et al. 2018 (PMID: [29483656](https://pubmed.ncbi.nlm.nih.gov/29483656/)). As one metric of background selection (the McVicker B statistic) is already included in the LD score regression (LDSC) baseline model (version 2.2), the post-processed B-statistic used by Pardiñas et al. was not used. Thus, a total of five genome-wide annotations were used, including: 
+
+- Four metrics of positive selection positive selection 
+    - Integrated haplotype score (iHS; PMID: [24274750](https://pubmed.ncbi.nlm.nih.gov/16494531/))
+    - Cross-population extended haplotype homozygosity (XP-EEH; PMID: [17943131](https://pubmed.ncbi.nlm.nih.gov/17943131/))
+    - Composite of multiple signals (CMS; PMID: [23415221](https://pubmed.ncbi.nlm.nih.gov/23415221/))
+    - Composite likelihood ratio statistic (CLR; PMID: [26290347](https://pubmed.ncbi.nlm.nih.gov/26290347/)) 
+- One metric of Neanderthal introgression
+    - Average posterior probability LA (PMID: [24476815](https://pubmed.ncbi.nlm.nih.gov/24476815/))
+
+Pardinas et al. include an excellent description of each of these natural selection metrics and their reasoning for using each, as pasted below:
+
+*"The use of different statistics is motivated by the fact that each of them is tailored to detect a particular selective process that acted on a particular timeframe (see [Vitti et al.](https://pubmed.ncbi.nlm.nih.gov/24274750/) for a review). For example, iHS and CMS are based on the inference of abnormally long haplotypes and thus are better powered to detect recent selective sweeps that occurred during the last ~30,000 years, such as those linked to lactose tolerance or pathogen response. On the other hand, CLR incorporates information about the spatial pattern of genomic variability (the site frequency spectrum) and corrects explicitly for evidence of BGS, thus being able to detect signals from 60,000 to 240,000 years ago. The B statistic uses phylogenetic information from other primates (chimpanzee, gorilla, orangutan and rhesus macaque) to infer the reduction in allelic diversity that exists in humans as a consequence of purifying selection on linked sites over evolutionary time frames. As the effects of background selection on large genomic regions can mimic those of positive selection, it is possible that the B statistic might amalgamate both, although the rather large diversity reduction that it infers for the human genome as a whole suggests that any bias due to positive selection is likely to be minor. Finally, XP-EEH is a haplotype-based statistic that compares two population samples, and its power is thus increased for alleles that have suffered differential selective pressures since those populations diverged. Although methodologically different, LA has a similar rationale by comparing human and Neanderthal genomes, to infer the probability of each human haplotype having been the result of an admixture event with Neanderthals."*
+
+## Downloading/creating natural selection annotations
+Metrics were downloaded from the following sources:
+
+- iHS and XP-EEH: original data files from articles were based on HapMap 2 data, thus both were re-generated by Pardiñas et al. using the [hapbin software](https://github.com/evotools/hapbin) applied to the EUR superpopulation of the 1KGPp3 dataset, with the AFR superpopulation used as the second population for XP-EEH. Thus, would need to do the same.
+- CMS: [link](https://www.broadinstitute.org/cms/results) supplied in publication, but files no longer available on server (error 404). 
+- CLR: in the data accessibility statement, a link is provided to the software and data used to generate the score i.e. this would need re-generating, which according to the article, could take 1 week ("each chromosome was run in parallel, taking 1 week for the whole genome"). 
+- LA: available from https://reich.hms.harvard.edu/datasets/landscape-neandertal-ancestry-present-day-humans.
+    - Contains statistics for several populations: ASN, CEU, CHB, CHS, EUR-ASN, EUR, FIN, GBR, IBS, JPT, TSI
+    - Would only need to use the EUR population (as using the EUR subset from the ALS GWAS)
+
+# Supplementary code {.tabset}
+
+## Downloading natural selection metrics
+
+### LA
+```{bash, eval = F}
+# Make directory
+cd /home/rreynolds/misc_projects/als-neanderthal-analysis/raw_data/
+mkdir neanderthal_la
+
+# Run wget for each file
+wget https://reich.hms.harvard.edu/sites/reich.hms.harvard.edu/files/inline-files/1.zip
+https://reich.hms.harvard.edu/sites/reich.hms.harvard.edu/files/inline-files/2.zip
+wget https://reich.hms.harvard.edu/sites/reich.hms.harvard.edu/files/inline-files/3.zip
+wget https://reich.hms.harvard.edu/sites/reich.hms.harvard.edu/files/inline-files/4.zip
+wget https://reich.hms.harvard.edu/sites/reich.hms.harvard.edu/files/inline-files/5.zip
+wget https://reich.hms.harvard.edu/sites/reich.hms.harvard.edu/files/inline-files/Readme_0.zip
+
+# Unzip all files
+unzip *.zip
+
+```
+
+
+# Results 
+
+
+<br><br>
+
+# Session info
+
+```{r reproducibility, echo = FALSE}
+# Session info
+library("sessioninfo")
+options(width = 120)
+session_info()
+```
