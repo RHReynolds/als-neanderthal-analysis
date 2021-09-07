@@ -7,7 +7,7 @@ date: "`r format(Sys.time(), '%d %B %Y')`"
 output: 
   bookdown::html_document2:
     figure_caption: yes
-    code_folding: show
+    code_folding: hide
     theme: paper
     highlight: kate
     df_print: paged
@@ -54,55 +54,236 @@ We therefore set out to investigate whether genetic variations in genomic region
 
 ## Choosing natural selection metrics
 
-The choice of natural selection metrics was based on a similar analysis performed by Pardiñas et al. 2018 (PMID: [29483656](https://pubmed.ncbi.nlm.nih.gov/29483656/)). As one metric of background selection (the McVicker B statistic) is already included in the LD score regression (LDSC) baseline model (version 2.2), the post-processed B-statistic used by Pardiñas et al. was not used. Thus, a total of five genome-wide annotations were used, including: 
+The choice of natural selection metrics was based on a similar analysis performed by Pardiñas et al. 2018 (PMID: [29483656](https://pubmed.ncbi.nlm.nih.gov/29483656/)). As one metric of background selection (the McVicker B statistic) is already included in the LD score regression (LDSC) baseline model (version 2.2), the post-processed B-statistic used by Pardiñas et al. was not used. **Importantly, Pardinas et al. transformed all measures before further analyses to a common scale, in which larger values indicate stronger effect of selection or increased probability of introgression** (see details below).
+
+A total of five genome-wide annotations were used, including: 
 
 - Four metrics of positive selection positive selection 
-    - Integrated haplotype score (iHS; PMID: [24274750](https://pubmed.ncbi.nlm.nih.gov/16494531/))
-    - Cross-population extended haplotype homozygosity (XP-EEH; PMID: [17943131](https://pubmed.ncbi.nlm.nih.gov/17943131/))
-    - Composite of multiple signals (CMS; PMID: [23415221](https://pubmed.ncbi.nlm.nih.gov/23415221/))
-    - Composite likelihood ratio statistic (CLR; PMID: [26290347](https://pubmed.ncbi.nlm.nih.gov/26290347/)) 
+    - **Integrated haplotype score** (iHS; PMID: [24274750](https://pubmed.ncbi.nlm.nih.gov/16494531/)).
+        - Variation on extended haplotype homozygosity (EHH), which measures the decay of identity, as a function of distance, of haplotypes that carry a specified "core" allele at one end. For each allele, haplotype homozygosity starts at 1 and decays to 0 with increasing distance. With positive selection, haplotype homozygosity extends further than expected under neutral model. 
+        - iHS compares area under the curved defined by EHH  for derived and ancestral variants as one travels further in genetic distance from core region (i.e. putatively selected allele). Statistic captures the intuition that both extreme EHH for a short distance and moderate EHH for a longer distance are suggestive of positive selection. 
+        - Standardised to mean 0 and variance 1, but can take on negative and positive values, with negative values indicating unusually long haplotypes carrying the derived allele and positive values indicating unusually long haplotypes carrying the ancestral allele. 
+        - Pardinas et al. used the absolute iHS, such that larger values indicate a stronger effect of selection irrespective of how it may arise.
+    - **Cross-population extended haplotype homozygosity** (XP-EEH; PMID: [17943131](https://pubmed.ncbi.nlm.nih.gov/17943131/))
+        - Variation on EHH.
+        - Compares haplotype lengths between populations to control for local variation in recombination rates i.e. will detect selective sweeps wherein a selected allele has approached/achieved fixation in one population but remains polymorphic in the human population as a whole.
+        - XP-EHH is defined with respect to two populations, A and B, a given core SNP and a given direction (distal or proximal). EHH is calculated for all SNPs in population A between the core SNP and X, and the value integrated with respect to genetic distance, with the result defined as $I_A$ . $I_B$ is defined analogously for population B. The statistic $ln(I_A /I_B)$ is then calculated; an unusually positive value suggests selection in population A, a negative value selection in B. A p-value is also calculated.
+        - Pardinas et al. used the EUR superpopulation of the 1KGPp3 dataset, with the AFR superpopulation used as the second population. Thereafter, they $-log_{10}$-transformed the p-value; thus, larger values equate to more significant selective sweeps.
+    - **Composite of multiple signals** (CMS; PMID: [23415221](https://pubmed.ncbi.nlm.nih.gov/23415221/))
+        - Integrates 5 different metrics:
+            a. Wright's fixation index (Fst): compares variance of allele frequencies within and between populations 
+            b. Long-range haplotypes: iHS and XP-EHH 
+            c. Frequency spectra–based tests: ΔDAF, which tests for derived alleles that are at high frequency relative to other populations, and ΔiHH, which measures the absolute rather than relative length of the haplotype.
+        - CMS can be calculated in two ways (as described [here](https://www.broadinstitute.org/cms/overview)): per SNP or across genomic regions. Pardinas et al. have used the regional CMS score.
+            a. Per SNP. Here each of the 5 tests is considered separately and posterior probability that a SNP is under selection given its score for the given test is calculated. Model assumes only one SNP is under selection in region and each SNP is equally likely to be the selected SNP. CMS is calculated by taking the product of the posterior probabilities for all 5 tests (i.e. as posterior probabilities range from 0 to 1, the max. value = 5).
+            b. Across genomic regions. As no prior distributions available for number of SNPs under selection across the genome, do not calculate posterior probabilities, but rather Bayes factors. Bayes factor is the ratio of likelihoods under a selected scenario and a neutral scenario (i.e. $BF = P(variant\in region|selected)/P(variant\in region|neutral)$). CMS is the product of the Bayes factors for all 5 tests. Bayes factors range from 0 to infinity, with a Bayes factor of 1 indicating that both hypotheses (H0 of neutral and H1 of selected) predict the data equally well. Thus larger values of genome-wide CMS indicate more support for H1 across the 5 tests.
+    - **Composite likelihood ratio statistic** (CLR; PMID: [26290347](https://pubmed.ncbi.nlm.nih.gov/26290347/)) 
+        - Defined as: $CLR = 2[log(CL_{sweep}) - log(CL_{background})]$ where $CL_{sweep}$ is the composite likelhood maximised under the parameter $\alpha$, and $CL_{background}$ is the composite likelihood calculated under the assumption $\alpha = \infty$. $\alpha$ quantifies the relative influence of recombination and selection, with small values of α indicating strong sweeps. 
+        - Includes a correction for background selection.
+        - Values range from 0 upwards.
 - One metric of Neanderthal introgression
-    - Average posterior probability LA (PMID: [24476815](https://pubmed.ncbi.nlm.nih.gov/24476815/))
+    - **Average posterior probability LA** (PMID: [24476815](https://pubmed.ncbi.nlm.nih.gov/24476815/)).
+        - Scales from 0 to 1, with 0 indicating impossibility of the event and 1 indicating certainty.
 
 Pardinas et al. include an excellent description of each of these natural selection metrics and their reasoning for using each, as pasted below:
 
 *"The use of different statistics is motivated by the fact that each of them is tailored to detect a particular selective process that acted on a particular timeframe (see [Vitti et al.](https://pubmed.ncbi.nlm.nih.gov/24274750/) for a review). For example, iHS and CMS are based on the inference of abnormally long haplotypes and thus are better powered to detect recent selective sweeps that occurred during the last ~30,000 years, such as those linked to lactose tolerance or pathogen response. On the other hand, CLR incorporates information about the spatial pattern of genomic variability (the site frequency spectrum) and corrects explicitly for evidence of BGS, thus being able to detect signals from 60,000 to 240,000 years ago. The B statistic uses phylogenetic information from other primates (chimpanzee, gorilla, orangutan and rhesus macaque) to infer the reduction in allelic diversity that exists in humans as a consequence of purifying selection on linked sites over evolutionary time frames. As the effects of background selection on large genomic regions can mimic those of positive selection, it is possible that the B statistic might amalgamate both, although the rather large diversity reduction that it infers for the human genome as a whole suggests that any bias due to positive selection is likely to be minor. Finally, XP-EEH is a haplotype-based statistic that compares two population samples, and its power is thus increased for alleles that have suffered differential selective pressures since those populations diverged. Although methodologically different, LA has a similar rationale by comparing human and Neanderthal genomes, to infer the probability of each human haplotype having been the result of an admixture event with Neanderthals."*
 
-## Downloading/creating natural selection annotations
-Metrics were downloaded from the following sources:
+## Running stratified LD score regression
 
-- iHS and XP-EEH: original data files from articles were based on HapMap 2 data, thus both were re-generated by Pardiñas et al. using the [hapbin software](https://github.com/evotools/hapbin) applied to the EUR superpopulation of the 1KGPp3 dataset, with the AFR superpopulation used as the second population for XP-EEH. Thus, would need to do the same.
-- CMS: [link](https://www.broadinstitute.org/cms/results) supplied in publication, but files no longer available on server (error 404). 
-- CLR: in the data accessibility statement, a link is provided to the software and data used to generate the score i.e. this would need re-generating, which according to the article, could take 1 week ("each chromosome was run in parallel, taking 1 week for the whole genome"). 
-- LA: available from https://reich.hms.harvard.edu/datasets/landscape-neandertal-ancestry-present-day-humans.
-    - Contains statistics for several populations: ASN, CEU, CHB, CHS, EUR-ASN, EUR, FIN, GBR, IBS, JPT, TSI
-    - Would only need to use the EUR population (as using the EUR subset from the ALS GWAS)
+Stratified LDSC (v 1.0.1) was used to test for heritability enrichment of each of the natural selection metrics. All natural selection metrics were provided by Pardiñas et al. and annotated to the ~9,997,000 SNPs present in the LDSC baseline model (v 2.2). As in Pardiñas et al., binary annotations were generated from the natural selection metrics, with cut-offs at the top 2%, 1% and 0.5% of the values of each metric in the full set of SNPs (which included only SNPs with a minor allele frequency > 5%). Annotations were then added individually to the baseline-LD model of 97 annotations provided by Hujoel et al. (v 2.2, GRCh37), comprising genome-wide annotations reflecting genetic and LD architecture (PMID: [30905396](https://pubmed.ncbi.nlm.nih.gov/30905396/)). HapMap Project Phase 3 (HapMap3) SNPs  and 1000 Genomes Project Phase 3 European population SNPs were used for the regression and LD reference panels, respectively (PMID: [20811451](https://pubmed.ncbi.nlm.nih.gov/20811451/), [23128226](https://pubmed.ncbi.nlm.nih.gov/23128226/)). The MHC region was excluded from all analyses owing to the complex and long-range LD patterns in this region. For all stratified LDSC analyses, we report a one-tailed p-value (coefficient p-value) based on the coefficient z-score outputted by stratified LDSC. A one-tailed test was used as we were only interested in annotation categories with a significantly positive contribution to trait heritability, conditional upon the baseline-LD model. 
 
 # Supplementary code {.tabset}
 
-## Downloading natural selection metrics
-
-### LA
+## Munging summary statistics
 ```{bash, eval = F}
-# Make directory
-cd /home/rreynolds/misc_projects/als-neanderthal-analysis/raw_data/
-mkdir neanderthal_la
+nohup bash \
+/home/rreynolds/misc_projects/als-neanderthal-analysis/scripts/01a_munge_sumstats.sh \
+&>/home/rreynolds/misc_projects/als-neanderthal-analysis/logs/01a_munge_sumstats.log&
 
-# Run wget for each file
-wget https://reich.hms.harvard.edu/sites/reich.hms.harvard.edu/files/inline-files/1.zip
-https://reich.hms.harvard.edu/sites/reich.hms.harvard.edu/files/inline-files/2.zip
-wget https://reich.hms.harvard.edu/sites/reich.hms.harvard.edu/files/inline-files/3.zip
-wget https://reich.hms.harvard.edu/sites/reich.hms.harvard.edu/files/inline-files/4.zip
-wget https://reich.hms.harvard.edu/sites/reich.hms.harvard.edu/files/inline-files/5.zip
-wget https://reich.hms.harvard.edu/sites/reich.hms.harvard.edu/files/inline-files/Readme_0.zip
+```
 
-# Unzip all files
-unzip *.zip
+## Generating annotations
+
+```{bash generate-binary-annot, eval = F}
+# Have to navigate to root project folder for script to work (as it uses here package)
+cd /home/rreynolds/misc_projects/als-neanderthal-analysis
+
+nohup Rscript \
+/home/rreynolds/misc_projects/als-neanderthal-analysis/scripts/01b_generate_binary_annot.R \
+&>/home/rreynolds/misc_projects/als-neanderthal-analysis/logs/01b_generate_binary_annot.log&
+
+```
+
+## Running stratified LDSC
+
+```{bash run-ldsc, eval = F}
+# Navigate to annotation folder
+cd /home/rreynolds/misc_projects/als-neanderthal-analysis/raw_data/01_annotations/ldsc_annotations/
+
+nohup Rscript \
+/home/rreynolds/misc_projects/als-neanderthal-analysis/scripts/01c_run_ldsc.R \
+&>/home/rreynolds/misc_projects/als-neanderthal-analysis/logs/01c_run_ldsc.log&
+
+```
+
+## Tidy results
+```{r tidy-results, eval = F}
+
+source(here::here("scripts", "01d_tidy_results.R"))
+
+```
+
+## Load files and results
+```{r load-files-results}
+
+metric_df <- 
+  list.files(
+    path = here::here("raw_data", "01_annotations", "positive_selection"),
+    pattern = "\\.annot",
+    full.names = T
+  ) %>% 
+  lapply(
+    ., 
+    readr::read_table
+  ) %>% 
+  qdapTools::list_df2df(col1 = "list_name") %>% 
+  dplyr::select(-list_name)
+
+metric_df_top <- 
+  readRDS(
+    here::here("raw_data", "01_annotations", "positive_selection_top_n.rds")
+  )
+
+results <- 
+  read_delim(
+    here::here("results", "01_annotations", "ldsc_summary.txt")
+  )
+
+```
+
+# Results
+
+## Distribution of natural selection metrics {.tabset}
+
+### Text
+
+- Across the entire genome, most selection metrics had low values i.e. little evidence of selection, as might be expected when averaging across the genome (see table). There was, however, substantial range. 
+- Unexpectedly, there were negative values in XP-EEH (see table). This is not expected given that these are $-log_{10}$-transformed p-values and negative values indicate p-values above 1 (which is not possible). Checked this with Antonio Pardinas who responded: *"It doesn't seem to be a error on my code as it exists on the original Hapbin output files that I used to extract this data, but its also a weirdly rare result. It only affects around 500 SNPs from three chromosomes (1, 9 and 15, the latter the one you spotted), and none of the regions contain any genes of note or signals of selection at least from a quick Genome Browser inspection. It looks like a bug and given the low numbers of SNPs affected it should be relatively safe to exclude them from analysis, at least for this statistic. It is also worth noting that all these analyses were performed with the very first release version of Hapbin (ca. 2015) and according to their Github site they ironed a few bugs and changed some aspects of the output since then."*
+- As we are using top 0.5%, 1% and 2% these negative values do not affect the XP-EEH annotations (nor the closely related iHS, which is also based on EEH). **If we choose to run these annotations as continuous annotations, we should be careful to remove these SNPs from annotation.** 
+- Annotations representing the top 0.5%, 1% and 2% of each selection metric demonstrated score distributions with a positive skew (Figure \@ref(fig:fig-metric-distrib)).  
+- Looking at the proportion of SNPs in each annotation (as compared to the total number of SNPs in the baseline model) across chromosomes showed that for most annotations there was an even distribution of SNPs across chromosomes (Figure \@ref(fig:fig-prop-snps-chr)). The exception to this was the CLR. 
+
+### Table(s)
+
+```{r table-metric-distrib}
+
+metric_df %>% 
+  tidyr::pivot_longer(
+    cols = IHS:LA,
+    names_to = "selection_metric",
+    values_to = "value"
+  ) %>% 
+  dplyr::group_by(selection_metric) %>% 
+  dplyr::summarise(
+    median = median(value),
+    mean = mean(value),
+    sd = sd(value),
+    min = min(value),
+    max = max(value)
+  ) 
 
 ```
 
 
-# Results 
+### Figures
+
+```{r fig-metric-distrib, fig.cap = "Distribution of selection metrics across top 0.5%, 1% and 2% of these metrics."}
+
+metric_df_top %>% 
+  ggplot(
+    aes(
+      x = cutoff,
+      y = value
+        )
+  ) +
+  geom_violin() +
+  geom_boxplot(width = 0.1, outlier.alpha = 0) +
+  facet_wrap(vars(selection_metric), scales = "free_y") + 
+  labs(
+    x = "Annotation cut-off",
+    y = "Selection metric value"
+  )
+
+```
+
+```{r fig-prop-snps-chr, fig.cap = "Number of SNPs in each annotation across each chromosome as a proportion of the total number of SNPs across each chromosome."}
+
+metric_df_top %>% 
+  dplyr::group_by(cutoff, selection_metric, CHR) %>% 
+  dplyr::summarise(n_snps = n()) %>% 
+  dplyr::inner_join(
+    metric_df %>% 
+      dplyr::group_by(CHR) %>% 
+      dplyr::summarise(total_snps = n())
+  ) %>% 
+  dplyr::mutate(
+    prop_snps = n_snps/total_snps
+  ) %>% 
+  ggplot(
+    aes(
+      x = CHR,
+      y = prop_snps
+      )
+    ) + 
+  geom_col(colour = "black", fill = "grey") +
+  facet_grid(
+    cols = vars(selection_metric),
+    rows = vars(cutoff)
+  ) +
+  labs(
+    x = "Chromosome",
+    y = "Proportion of SNPs\n(n snps, annotation/n snps, total)"
+  )
+```
+
+## Results of stratified LDSC {.tabset}
+
+### Text
+
+- FDR multiple test correction was applied across each GWAS, correcting for the number of annotations run (i.e. 3 cut-offs x 5 selection metrics).
+- No annotations passed FDR < 0.05.
+- However, a nominal enrichment (co-efficient p-value < 0.05) for ALS $h^2_{SNP}$ was observed using the top 0.5%, 1% and 2% iHS and XP-EEH statistics. Notably, both statistics are variants on EEH and are thought to be complementary in terms of their scope: *"whereas iHS has more power to detect incomplete sweeps, XP-EHH is useful when the sweep is near fixation within one population"* (PMID: [24274750](https://pubmed.ncbi.nlm.nih.gov/24274750/)). While only nominal, this suggests that there is some evidence of positive selection in ALS.
+
+```{r}
+print("Results (p < 0.05):")
+
+results %>% 
+  dplyr::group_by(GWAS) %>% 
+  dplyr::filter(Z_score_P < 0.05) %>% 
+  dplyr::select(
+    GWAS, cutoff, selection_metrics, Enrichment, Coefficient, Z_score_P
+    )
+```
+
+
+### Table(s)
+
+```{r}
+
+print("All results:")
+
+results %>% 
+  dplyr::group_by(GWAS) %>% 
+  dplyr::mutate(Z_score_FDR = p.adjust(Z_score_P, method = "fdr")) %>% 
+  dplyr::select(-contains("SE"), -contains("log")) %>% 
+  DT::datatable(
+    rownames = FALSE,
+    options = list(scrollX = TRUE),
+    class = 'white-space: nowrap'
+  )
+
+```
 
 
 <br><br>
