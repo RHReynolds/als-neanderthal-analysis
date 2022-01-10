@@ -158,6 +158,14 @@ metric_df_top <-
 results <- 
   read_delim(
     here::here("results", "01_annotations", "ldsc_summary.txt")
+  ) %>% 
+  dplyr::group_by(GWAS) %>% 
+  dplyr::mutate(
+    Z_score_FDR = 
+      p.adjust(
+        p = Z_score_P, 
+        method = "fdr"
+        )
   )
 
 ```
@@ -252,17 +260,35 @@ metric_df_top %>%
 ### Text
 
 - FDR multiple test correction was applied across each GWAS, correcting for the number of annotations run (i.e. 3 cut-offs x 5 selection metrics).
-- No annotations passed FDR < 0.05.
-- However, a nominal enrichment (co-efficient p-value < 0.05) for ALS $h^2_{SNP}$ was observed using the top 0.5%, 1% and 2% iHS and XP-EEH statistics. Notably, both statistics are variants on EEH and are thought to be complementary in terms of their scope: *"whereas iHS has more power to detect incomplete sweeps, XP-EHH is useful when the sweep is near fixation within one population"* (PMID: [24274750](https://pubmed.ncbi.nlm.nih.gov/24274750/)). While only nominal, this suggests that there is some evidence of positive selection in ALS.
+- Using FDR-corrected results, a significant depletion was observed for:
+    - AD $h^2_{SNP}$ using the top 2% CLR statistic. Given that this is only observed for the top 2% CLR statistic, and there is no nominal depletion (co-efficient p-value < 0.05) across either the top 0.5% or 1%, this does not suggest that SNPs under positive selection are depleted for association with AD, as one might conclude from the significant p-value.
+    - PD $h^2_{SNP}$ using the top 0.5% LA. Further, there was a nominal depletion (co-efficient p-value < 0.05) of PD $h^2_{SNP}$ using the top 1% LA, suggesting that introgressed SNPs are depleted for association with PD.
+    - PD $h^2_{SNP}$ using the top 0.5%, 1% and 2% XP-EEH statistic, suggesting that SNPs under positive selection are depleted for association with PD.
+    
+```{r}
+print("Results (FDR < 0.05):")
+
+results %>% 
+  dplyr::filter(Z_score_FDR < 0.05) %>% 
+  dplyr::arrange(GWAS, selection_metrics, cutoff) %>% 
+  dplyr::select(
+    GWAS, cutoff, selection_metrics, Enrichment, Coefficient, Z_score_P, Z_score_FDR
+    )
+```
+
+- While no annotations were significantly enriched/depleted when using the ALS GWAS, there were nominal results (co-efficient p-value < 0.05), including:
+    - An enrichment ALS $h^2_{SNP}$ using the top 0.5%, 1% iHS statistic and the top 2% of the XP-EEH statistic. Notably, both statistics are variants on EEH and are thought to be complementary in terms of their scope: *"whereas iHS has more power to detect incomplete sweeps, XP-EHH is useful when the sweep is near fixation within one population"* (PMID: [24274750](https://pubmed.ncbi.nlm.nih.gov/24274750/)). 
+    - A depletion of ALS $h^2_{SNP}$ using the top 0.5%, 1% and 2% CLR.
+    - Confusingly, iHS, XP-EEH and CLR are all metrics of positive selection, thus an enrichment and depletion appears counter-intuitive. However, it is important to remember that these metrics detect particular selective processes that act on a particular timeframe. As stated in Pardiñas et al. 2018, iHS (and by extension XP-EEH) are *"better powered to detect recent selective sweeps"*, while CLR *"incorporates information about the spatial variability of genomic variability and corrects explicitly for evidence of background selection, thus being able to detect signals from 60,000 to 240,000 years ago"*. Thus, it is possible that SNPs from recent selective sweeps are enriched for association with ALS, while those SNPs from older selective sweeps are depleted for association with ALS.
 
 ```{r}
 print("Results (p < 0.05):")
 
 results %>% 
-  dplyr::group_by(GWAS) %>% 
   dplyr::filter(Z_score_P < 0.05) %>% 
+  dplyr::arrange(GWAS, selection_metrics, cutoff) %>% 
   dplyr::select(
-    GWAS, cutoff, selection_metrics, Enrichment, Coefficient, Z_score_P
+    GWAS, cutoff, selection_metrics, Enrichment, Coefficient, Z_score_P, Z_score_FDR
     )
 ```
 
@@ -275,7 +301,6 @@ print("All results:")
 
 results %>% 
   dplyr::group_by(GWAS) %>% 
-  dplyr::mutate(Z_score_FDR = p.adjust(Z_score_P, method = "fdr")) %>% 
   dplyr::select(-contains("SE"), -contains("log")) %>% 
   DT::datatable(
     rownames = FALSE,

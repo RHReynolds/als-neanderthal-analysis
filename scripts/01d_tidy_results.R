@@ -25,7 +25,7 @@ results <-
     path_to_results = file_paths
   ) %>% 
   LDSCforRyten::Calculate_enrichment_SE_and_logP(
-    ., one_sided = "+"
+    ., one_sided = NULL
   ) %>% 
   tidyr::separate(
     annot_name, 
@@ -41,6 +41,6 @@ results <-
 
 write_delim(
   results, 
-  path = here::here("results", "01_annotations", "ldsc_summary.txt"),
+  file = here::here("results", "01_annotations", "ldsc_summary.txt"),
   delim = "\t"
 )  
