@@ -3,4 +3,4 @@
 .RData
 .Ruserdata
 *.Rproj
-raw_data/
+raw_data/01_annotations/*/
