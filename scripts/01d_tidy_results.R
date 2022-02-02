@@ -1,9 +1,10 @@
-# Description: Script to run natural selection annotations through LDSC
+# Description: Script to tidy results and generate supplementary table
 
 # Load packages -----------------------------------------------------------
 
 library(LDSCforRyten)
 library(here)
+library(janitor)
 library(tidyverse)
 library(stringr)
 
@@ -37,6 +38,51 @@ results <-
   ) %>% 
   dplyr::select(GWAS, cutoff, selection_metrics, everything())
 
+
+# Supp table --------------------------------------------------------------
+
+xlsx <- 
+  setNames(
+    vector(mode = "list", length = 2),
+    c("column_descriptions", "results")
+  )
+
+xlsx[[2]] <-
+  results %>% 
+  dplyr::group_by(GWAS) %>%
+  dplyr::mutate(
+    z_score_fdr = 
+      p.adjust(
+        p = Z_score_P, 
+        method = "fdr"
+      )
+  ) %>% 
+  janitor::clean_names() %>% 
+  dplyr::select(
+    -contains("_se"), -log_p, -z_score_log_p
+  )
+
+xlsx[[1]] <-
+  tibble(
+    `Column name` = colnames(xlsx[[2]]),
+    Description = c(
+      "GWAS",
+      "The percentile of the natural selection metric",
+      "The natural selection metric",
+      "Proportion of SNPs accounted for by the annotation within the baseline set of SNPs",
+      "Proportion of heritability accounted for by the annotation",
+      "Jackknife standard errors for the proportion of heritability. Block jacknife over SNPs with 200 equally sized blocks of adjacent SNPs.",
+      "Enrichment = (Proportion of heritability)/(Proportion of SNPs)",
+      "Standard error of enrichment",
+      "P-value of total enrichment",
+      "Regression co-efficient i.e. contribution of annotation after controlling for all other categories in the model",
+      "Standard error of coefficient. Estimated using the covariance matrix for coefficient estimates.",
+      "Z-score for significance of coefficient",
+      "P-value for coefficient computed from z-score",
+      "FDR-adjusted coefficient p-value (adjusted by number of percentiles and selection metrics)"
+    )
+  )
+
 # Save files --------------------------------------------------------------
 
 write_delim(
@@ -44,3 +90,12 @@ write_delim(
   file = here::here("results", "01_annotations", "ldsc_summary.txt"),
   delim = "\t"
 )  
+
+openxlsx::write.xlsx(
+  xlsx,
+  file = here::here("results", "01_annotations", "Supplementary_Table2.xlsx"),
+  row.names = FALSE,
+  headerStyle = openxlsx::createStyle(textDecoration = "BOLD"),
+  firstRow = TRUE,
+  append = TRUE
+)
