@@ -166,6 +166,19 @@ results <-
         )
   )
 
+results_w_baseline <-
+  read_delim(
+    here::here("results", "01_annotations", "ldsc_summary_w_baseline_annot.txt")
+  ) %>% 
+  dplyr::group_by(GWAS, cutoff, selection_metrics) %>% 
+  dplyr::mutate(
+    Z_score_FDR = 
+      p.adjust(
+        p = Z_score_P, 
+        method = "fdr"
+        )
+  )
+
 ```
 
 # Results
@@ -253,7 +266,7 @@ metric_df_top %>%
   )
 ```
 
-## Results of stratified LDSC {.tabset}
+## Results of stratified LDSC: annotations of interest {.tabset}
 
 ### Text
 
@@ -299,6 +312,51 @@ print("All results:")
 
 results %>% 
   dplyr::group_by(GWAS) %>% 
+  dplyr::select(-contains("SE"), -contains("log")) %>% 
+  DT::datatable(
+    rownames = FALSE,
+    options = list(scrollX = TRUE),
+    class = 'white-space: nowrap'
+  )
+
+```
+
+## Results of stratified LDSC: baseline annotations {.tabset}
+
+- FDR multiple test correction was applied across each GWAS and Category, correcting for the number of annotations of interest run (i.e. 3 cut-offs x 5 selection metrics). This is comparable to the strategy applied for the annotations of interest, but is probably not sufficiently stringent, given the number of baseline annotations.
+- The same baseline annotations are enriched/depleted across different GWASs in spite of changing selection metrics/cut-offs. Thus, we can average (mean) across enrichment and coefficient estimates to get an idea of how these baseline annotations are contributing to trait heritability, depending on the trait.
+
+```{r}
+print("Results averaged across 3 cut-offs x 5 selection metrics (FDR < 0.05):")
+
+results_w_baseline %>% 
+  dplyr::filter(
+    Category != "L2_0", # exclude selection metrics
+    Z_score_FDR < 0.2
+    ) %>% 
+  dplyr::group_by(GWAS, Category) %>%
+  dplyr::summarise(
+    n = n(),
+    mean_prop_h2 = mean(Prop._h2),
+    mean_enrichment = mean(Enrichment),
+    sd_enrichment = sd(Enrichment),
+    mean_coefficient = mean(Coefficient),
+    sd_coefficient = sd(Coefficient),
+    mean_z_score_p = mean(Z_score_P),
+    sd_z_score_p = sd(Z_score_P)
+  ) 
+```
+
+
+### Table(s)
+
+```{r}
+
+print("Results (FDR < 0.05):")
+
+results_w_baseline %>% 
+  dplyr::group_by(GWAS) %>% 
+  dplyr::filter(Z_score_FDR < 0.05) %>% 
   dplyr::select(-contains("SE"), -contains("log")) %>% 
   DT::datatable(
     rownames = FALSE,

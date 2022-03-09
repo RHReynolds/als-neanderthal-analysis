@@ -21,23 +21,53 @@ file_paths <-
     full.names = T
   )
 
-results <-
-  LDSCforRyten::Assimilate_H2_results(
-    path_to_results = file_paths
-  ) %>% 
-  LDSCforRyten::Calculate_enrichment_SE_and_logP(
-    ., one_sided = NULL
-  ) %>% 
-  tidyr::separate(
-    annot_name, 
-    into = c("cutoff", "selection_metrics"), sep = ":"
-  ) %>% 
-  dplyr::mutate(
-    cutoff = 
-      str_c("Top ", cutoff, "%")
-  ) %>% 
-  dplyr::select(GWAS, cutoff, selection_metrics, everything())
+results_w_baseline  <- 
+  file_paths %>% 
+  lapply(., function(file){
+    
+    file_name <- file
+    
+    GWAS <- 
+      file_name %>% 
+      stringr::str_replace("/.*/", "") %>% 
+      stringr::str_replace("\\.results", "") %>% 
+      stringr::str_replace("_.*", "")
+    
+    annot_name <- 
+      file_name %>% 
+      stringr::str_replace("/.*/", "") %>% 
+      stringr::str_replace("\\.results", "") %>% 
+      stringr::str_replace(".*_", "")
+    
+    readr::read_delim(file = file_name, delim = "\t") %>% 
+      dplyr::mutate(
+        annot_name = annot_name, 
+        GWAS = GWAS
+      ) %>% 
+      LDSCforRyten::Calculate_enrichment_SE_and_logP(
+        ., one_sided = NULL
+      ) %>% 
+      tidyr::separate(
+        annot_name, 
+        into = c("cutoff", "selection_metrics"), sep = ":"
+      ) %>% 
+      dplyr::mutate(
+        cutoff = 
+          str_c("Top ", cutoff, "%")
+      ) %>% 
+      dplyr::select(
+        GWAS, cutoff, selection_metrics, everything()
+      ) 
+    
+  }) %>% 
+  qdapTools::list_df2df() %>% 
+  tibble::as_tibble() %>% 
+  dplyr::select(-X1)
 
+results <-
+  results_w_baseline %>% 
+  dplyr::filter(Category == "L2_0") %>% 
+  dplyr::select(-Category)
 
 # Supp table --------------------------------------------------------------
 
@@ -86,10 +116,16 @@ xlsx[[1]] <-
 # Save files --------------------------------------------------------------
 
 write_delim(
+  results_w_baseline, 
+  file = here::here("results", "01_annotations", "ldsc_summary_w_baseline_annot.txt"),
+  delim = "\t"
+)  
+
+write_delim(
   results, 
   file = here::here("results", "01_annotations", "ldsc_summary.txt"),
   delim = "\t"
-)  
+) 
 
 openxlsx::write.xlsx(
   xlsx,
