@@ -170,7 +170,7 @@ results_w_baseline <-
   read_delim(
     here::here("results", "01_annotations", "ldsc_summary_w_baseline_annot.txt")
   ) %>% 
-  dplyr::group_by(GWAS, cutoff, selection_metrics) %>% 
+  dplyr::group_by(GWAS, Category) %>% 
   dplyr::mutate(
     Z_score_FDR = 
       p.adjust(
@@ -288,9 +288,9 @@ results %>%
 ```
 
 - While no annotations were significantly enriched/depleted when using the ALS GWAS, there were nominal results (co-efficient p-value < 0.05), including:
-    - An enrichment ALS $h^2_{SNP}$ using the top 0.5%, 1% iHS statistic and the top 2% of the XP-EEH statistic. Notably, both statistics are variants on EEH and are thought to be complementary in terms of their scope: *"whereas iHS has more power to detect incomplete sweeps, XP-EHH is useful when the sweep is near fixation within one population"* (PMID: [24274750](https://pubmed.ncbi.nlm.nih.gov/24274750/)). 
+    - An enrichment ALS $h^2_{SNP}$ using the top 0.5%, 1% iHS statistic and the top 2% of the XP-EEH statistic. Notably, both statistics are variants on EEH and are thought to be complementary in terms of their scope: *"whereas iHS has more power to detect incomplete sweeps, XP-EHH is useful when the sweep is near fixation within one population"* (PMID: [24274750](https://pubmed.ncbi.nlm.nih.gov/24274750/)). Important to remember, however, that XP-EEH is a cross-population measure!
     - A depletion of ALS $h^2_{SNP}$ using the top 0.5%, 1% and 2% CLR.
-    - Confusingly, iHS, XP-EEH and CLR are all metrics of positive selection, thus an enrichment and depletion appears counter-intuitive. However, it is important to remember that these metrics detect particular selective processes that act on a particular timeframe. As stated in Pardiñas et al. 2018, iHS (and by extension XP-EEH) are *"better powered to detect recent selective sweeps"*, while CLR *"incorporates information about the spatial variability of genomic variability and corrects explicitly for evidence of background selection, thus being able to detect signals from 60,000 to 240,000 years ago"*. Thus, it is possible that SNPs from recent selective sweeps are enriched for association with ALS, while those SNPs from older selective sweeps are depleted for association with ALS.
+    - Confusingly, iHS, XP-EEH and CLR are all metrics of positive selection, thus an enrichment and depletion appears counter-intuitive. However, it is important to remember that these metrics detect particular selective processes that act on a particular timeframe. As stated in Pardiñas et al. 2018, iHS is *"better powered to detect recent selective sweeps"*, while CLR *"incorporates information about the spatial variability of genomic variability and corrects explicitly for evidence of background selection, thus being able to detect signals from 60,000 to 240,000 years ago"*. Thus, it is possible that SNPs from recent selective sweeps are enriched for association with ALS, while those SNPs from older selective sweeps are depleted for association with ALS.
 
 ```{r}
 print("Results (p < 0.05):")
@@ -323,6 +323,8 @@ results %>%
 
 ## Results of stratified LDSC: baseline annotations {.tabset}
 
+### Text
+
 - FDR multiple test correction was applied across each GWAS and Category, correcting for the number of annotations of interest run (i.e. 3 cut-offs x 5 selection metrics). This is comparable to the strategy applied for the annotations of interest, but is probably not sufficiently stringent, given the number of baseline annotations.
 - The same baseline annotations are enriched/depleted across different GWASs in spite of changing selection metrics/cut-offs. Thus, we can average (mean) across enrichment and coefficient estimates to get an idea of how these baseline annotations are contributing to trait heritability, depending on the trait.
 
@@ -332,7 +334,7 @@ print("Results averaged across 3 cut-offs x 5 selection metrics (FDR < 0.05):")
 results_w_baseline %>% 
   dplyr::filter(
     Category != "L2_0", # exclude selection metrics
-    Z_score_FDR < 0.2
+    Z_score_FDR < 0.05
     ) %>% 
   dplyr::group_by(GWAS, Category) %>%
   dplyr::summarise(
@@ -355,7 +357,6 @@ results_w_baseline %>%
 print("Results (FDR < 0.05):")
 
 results_w_baseline %>% 
-  dplyr::group_by(GWAS) %>% 
   dplyr::filter(Z_score_FDR < 0.05) %>% 
   dplyr::select(-contains("SE"), -contains("log")) %>% 
   DT::datatable(
