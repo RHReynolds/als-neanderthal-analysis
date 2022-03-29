@@ -1,7 +1,15 @@
+# Description: Script to generate figure summarising coefficient p-values from stratified-LD score regression (Figure 1)
+
+# Load packages -----------------------------------------------------------
+
 library(tidyverse)
 library(readxl)
 
+# Load files -----------------------------------------------------------
+
 Neanderthal <- read_excel(als-neanderthal-analysis/results/01_annotations/Supplementary_Table2.xlsx)
+
+# Main -----------------------------------------------------------
 
 order_metric <- c("LA", "CLR", "CMS", "IHS", "XPEHH")
 
