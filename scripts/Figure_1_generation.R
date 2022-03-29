@@ -1,3 +1,8 @@
+library(tidyverse)
+library(readxl)
+
+Neanderthal <- read_excel(als-neanderthal-analysis/results/01_annotations/Supplementary_Table2.xlsx)
+
 order_metric <- c("LA", "CLR", "CMS", "IHS", "XPEHH")
 
 Neanderthal_sig <- Neanderthal %>% mutate(FDR_Pvalue = ifelse(FDR_P<0.05, "FDR p-value < 0.05", "Not significant, FDR p-value >=0.05")) %>%
