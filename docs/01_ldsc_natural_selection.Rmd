@@ -146,11 +146,24 @@ metric_df <-
     readr::read_table
   ) %>% 
   qdapTools::list_df2df(col1 = "list_name") %>% 
-  dplyr::select(-list_name)
+  dplyr::select(-list_name) %>% 
+  dplyr::rename(XPEHH = XPEEH)
 
 metric_df_top <- 
   readRDS(
     here::here("raw_data", "01_annotations", "positive_selection_top_n.rds")
+  ) %>% 
+  dplyr::mutate(
+    selection_metric =
+      case_when(
+        selection_metric == "XPEEH" ~ "XPEHH",
+        TRUE ~ selection_metric
+      ),
+    joint_name =
+      case_when(
+        str_detect(joint_name, "XPEEH") ~ str_replace(joint_name, "XPEEH", "XPEHH"),
+        TRUE ~ joint_name
+      )
   )
 
 results <- 
@@ -189,7 +202,7 @@ results_w_baseline <-
 
 - Across the entire genome, most selection metrics had low values i.e. little evidence of selection, as might be expected when averaging across the genome (see table). There was, however, substantial range. 
 - Unexpectedly, there were negative values in XP-EHH (see table). This is not expected given that these are $-log_{10}$-transformed p-values and negative values indicate p-values above 1 (which is not possible). Checked this with Antonio Pardinas who responded: *"It doesn't seem to be a error on my code as it exists on the original Hapbin output files that I used to extract this data, but its also a weirdly rare result. It only affects around 500 SNPs from three chromosomes (1, 9 and 15, the latter the one you spotted), and none of the regions contain any genes of note or signals of selection at least from a quick Genome Browser inspection. It looks like a bug and given the low numbers of SNPs affected it should be relatively safe to exclude them from analysis, at least for this statistic. It is also worth noting that all these analyses were performed with the very first release version of Hapbin (ca. 2015) and according to their Github site they ironed a few bugs and changed some aspects of the output since then."*
-- As we are using top 0.5%, 1% and 2% these negative values do not affect the XP-EHH annotations (nor the closely related iHS, which is also based on EEH). **If we choose to run these annotations as continuous annotations, we should be careful to remove these SNPs from annotation.** 
+- As we are using top 0.5%, 1% and 2% these negative values do not affect the XP-EHH annotations (nor the closely related iHS, which is also based on EHH). **If we choose to run these annotations as continuous annotations, we should be careful to remove these SNPs from annotation.** 
 - Annotations representing the top 0.5%, 1% and 2% of each selection metric demonstrated score distributions with a positive skew (Figure \@ref(fig:fig-metric-distrib)).  
 - Looking at the proportion of SNPs in each annotation (as compared to the total number of SNPs in the baseline model) across chromosomes showed that for most annotations there was an even distribution of SNPs across chromosomes (Figure \@ref(fig:fig-prop-snps-chr)). The exception to this was the CLR. 
 
@@ -288,7 +301,7 @@ results %>%
 ```
 
 - While no annotations were significantly enriched/depleted when using the ALS GWAS, there were nominal results (co-efficient p-value < 0.05), including:
-    - An enrichment ALS $h^2_{SNP}$ using the top 0.5%, 1% iHS statistic and the top 2% of the XP-EHH statistic. Notably, both statistics are variants on EEH and are thought to be complementary in terms of their scope: *"whereas iHS has more power to detect incomplete sweeps, XP-EHH is useful when the sweep is near fixation within one population"* (PMID: [24274750](https://pubmed.ncbi.nlm.nih.gov/24274750/)). Important to remember, however, that XP-EHH is a cross-population measure!
+    - An enrichment ALS $h^2_{SNP}$ using the top 0.5%, 1% iHS statistic and the top 2% of the XP-EHH statistic. Notably, both statistics are variants on EHH and are thought to be complementary in terms of their scope: *"whereas iHS has more power to detect incomplete sweeps, XP-EHH is useful when the sweep is near fixation within one population"* (PMID: [24274750](https://pubmed.ncbi.nlm.nih.gov/24274750/)). Important to remember, however, that XP-EHH is a cross-population measure!
     - A depletion of ALS $h^2_{SNP}$ using the top 0.5%, 1% and 2% CLR.
     - Confusingly, iHS, XP-EHH and CLR are all metrics of positive selection, thus an enrichment and depletion appears counter-intuitive. However, it is important to remember that these metrics detect particular selective processes that act on a particular timeframe. As stated in Pardiñas et al. 2018, iHS is *"better powered to detect recent selective sweeps"*, while CLR *"incorporates information about the spatial variability of genomic variability and corrects explicitly for evidence of background selection, thus being able to detect signals from 60,000 to 240,000 years ago"*. Thus, it is possible that SNPs from recent selective sweeps are enriched for association with ALS, while those SNPs from older selective sweeps are depleted for association with ALS.
 
