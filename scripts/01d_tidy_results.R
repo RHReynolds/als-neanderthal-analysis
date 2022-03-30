@@ -62,7 +62,15 @@ results_w_baseline  <-
   }) %>% 
   qdapTools::list_df2df() %>% 
   tibble::as_tibble() %>% 
-  dplyr::select(-X1)
+  dplyr::select(-X1) %>% 
+  # fix typo in XPEEH
+  dplyr::mutate(
+    selection_metrics =
+      case_when(
+        selection_metrics == "XPEEH" ~ "XPEHH",
+        TRUE ~ selection_metrics
+      )
+  )
 
 results <-
   results_w_baseline %>% 

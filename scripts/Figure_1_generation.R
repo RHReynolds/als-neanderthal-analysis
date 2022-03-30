@@ -24,7 +24,7 @@ Neanderthal <-
 
 # Main -----------------------------------------------------------
 
-order_metric <- c("LA", "CLR", "CMS", "IHS", "XPEEH")
+order_metric <- c("LA", "CLR", "CMS", "IHS", "XPEHH")
 
 Neanderthal_sig <- 
   Neanderthal %>% 
@@ -81,7 +81,7 @@ ggsave(
   Coefficient_plot, 
   device = "png", 
   path = args$results_dir,
-  width = 150,  
+  width = 180,  
   height = 150,
   units = "mm",
   dpi = 300,
