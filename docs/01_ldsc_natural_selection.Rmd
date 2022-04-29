@@ -42,11 +42,10 @@ theme_rhr <- theme_set(
 
 # Background
 
-***Zhongbo's draft: ***
-
-Encephalisation and the evolution of complex human-specific traits are thought to have increased the susceptibility of Homo sapiens to disorders of the brain compared to their aged non-human primate counterparts. This is seen in Alzheimer’s and Parkinson’s disease, which have not been observed naturally on a pathological or phenotypic level in non-human species. Likewise, unique motor dysfunction in amyotrophic lateral sclerosis (ALS) supports the selective vulnerability of the highly-developed corticomotoneuronal system in man. Human-lineage-specific genomic sequences have been shown to be enriched for brain-specific elements and risk loci for neurodegenerative disorders. Thus, while positive natural selection has driven human adaptive evolution,8 it may be possible that the same selected alleles also influence risk of neurodegenerative disease. 
-
-It is not known whether this neuro-vulnerability arose after divergence from other species or whether it represents a more recent phenomenon, characteristic of modern-day humans over other hominids. As anatomically-modern humans migrated out of Africa 50 to 100 thousand years ago, they interbred with archaic hominins including Neanderthals. As a result, Neanderthal DNA accounts for approximately 1–4% of the modern Eurasian genome. While most Neanderthal DNA experienced purifying selective pressures, positive selection of archaic alleles may have contributed to modern human adaptation to the non-African environment through modulating dermatological, immunological and metabolic function. On the other hand, these introgressed Neanderthal alleles have also been implicated in influencing disease risk such as in depression and skin disorders. It remains unclear how much Neanderthal admixture has affected our risk of neurodegenerative disorders. While Simonti and colleagues found that Neanderthal single nuclear polymorphisms (SNPs) may be associated with "neurological" phenotypes through electronic health records of European patients, these nervous system traits were not representative of neurodegenerative disease or common neurological disorders. More recently, one study aimed to address the complex nature of medically-relevant traits and the genome-wide influence of Neanderthal admixture using UK Biobank data. This found that introgressed variants were depleted for heritability of high-level cognitive traits. 
+- Encephalisation and the evolution of complex human-specific traits are thought to have increased the susceptibility of Homo sapiens to disorders of the brain compared to their aged non-human primate counterparts.
+- It is not known whether this neuro-vulnerability arose after divergence from other species or whether it represents a more recent phenomenon, characteristic of modern-day humans over other hominids. 
+- It remains unclear how much Neanderthal admixture has affected our risk of neurodegenerative disorders. 
+- Thus, to quantify the contribution of Neanderthal admixture to the heritability of neurodegenerative diseases and to examine whether natural selection maintains common genetic risk of these disorders, we tested the relationship between alleles associated with Alzheimer’s disease, ALS and Parkinson’s disease from recent genome-wide association studies (GWAS) with SNP-based signatures of natural selection.
 
 # Methods {.tabset}
 
@@ -385,9 +384,15 @@ results_w_baseline %>%
 
 # Session info
 
+<details>
+  <summary>Show/hide</summary>
+
 ```{r reproducibility, echo = FALSE}
 # Session info
 library("sessioninfo")
 options(width = 120)
 session_info()
 ```
+
+</details> 
+
