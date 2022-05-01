@@ -4,6 +4,10 @@
 
 This repository contains scripts used to perform heritability enrichment analyses using neurodegenerative GWASs and natural selection metrics.
 
+# Citation
+
+If you use any of the data from this repository, please cite our [paper](https://www.biorxiv.org/content/10.1101/2022.04.29.490053v1).
+
 # License
 
 The code in this repository is released under an MIT license. This repository is distributed in the hope that it will be useful to the wider community, but without any warranty of any kind. Please see the [LICENSE](LICENSE) file for more details.
