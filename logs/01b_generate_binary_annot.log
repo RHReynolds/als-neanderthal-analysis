@@ -5,9 +5,9 @@ Loading required package: parallel
 here() starts at /home/rreynolds/misc_projects/als-neanderthal-analysis
 -- Attaching packages --------------------------------------- tidyverse 1.3.1 --
 v ggplot2 3.3.5     v purrr   0.3.4
-v tibble  3.1.4     v dplyr   1.0.7
-v tidyr   1.1.3     v stringr 1.4.0
-v readr   2.0.0     v forcats 0.5.1
+v tibble  3.1.6     v dplyr   1.0.7
+v tidyr   1.1.4     v stringr 1.4.0
+v readr   2.0.2     v forcats 0.5.1
 -- Conflicts ------------------------------------------ tidyverse_conflicts() --
 x purrr::accumulate() masks foreach::accumulate()
 x dplyr::filter()     masks stats::filter()
@@ -27,8 +27,8 @@ $file_dir
 [1] "/home/rreynolds/misc_projects/als-neanderthal-analysis/raw_data/01_annotations/positive_selection"
 
 $top_percent
-  top_2   top_1 top_0.5 
-    2.0     1.0     0.5 
+top_1 top_2 top_3 top_4 top_5 
+    1     2     3     4     5 
 
 $baseline_model
 [1] "97"
@@ -348,172 +348,92 @@ discovered package(s):
 automatically exporting the following variables from the local environment:
   BM, ldsc_list 
 explicitly exporting package(s): LDSCforRyten, tidyverse, stringr
-numValues: 15, numResults: 0, stopped: TRUE
+numValues: 25, numResults: 0, stopped: TRUE
 got results for task 1
-numValues: 15, numResults: 1, stopped: TRUE
+numValues: 25, numResults: 1, stopped: TRUE
 returning status FALSE
 got results for task 2
-numValues: 15, numResults: 2, stopped: TRUE
+numValues: 25, numResults: 2, stopped: TRUE
 returning status FALSE
 got results for task 3
-numValues: 15, numResults: 3, stopped: TRUE
+numValues: 25, numResults: 3, stopped: TRUE
 returning status FALSE
 got results for task 4
-numValues: 15, numResults: 4, stopped: TRUE
+numValues: 25, numResults: 4, stopped: TRUE
 returning status FALSE
 got results for task 5
-numValues: 15, numResults: 5, stopped: TRUE
+numValues: 25, numResults: 5, stopped: TRUE
 returning status FALSE
 got results for task 6
-numValues: 15, numResults: 6, stopped: TRUE
+numValues: 25, numResults: 6, stopped: TRUE
 returning status FALSE
 got results for task 7
-numValues: 15, numResults: 7, stopped: TRUE
+numValues: 25, numResults: 7, stopped: TRUE
 returning status FALSE
 got results for task 8
-numValues: 15, numResults: 8, stopped: TRUE
+numValues: 25, numResults: 8, stopped: TRUE
 returning status FALSE
 got results for task 9
-numValues: 15, numResults: 9, stopped: TRUE
+numValues: 25, numResults: 9, stopped: TRUE
 returning status FALSE
 got results for task 10
-numValues: 15, numResults: 10, stopped: TRUE
+numValues: 25, numResults: 10, stopped: TRUE
 returning status FALSE
 got results for task 11
-numValues: 15, numResults: 11, stopped: TRUE
+numValues: 25, numResults: 11, stopped: TRUE
 returning status FALSE
 got results for task 12
-numValues: 15, numResults: 12, stopped: TRUE
+numValues: 25, numResults: 12, stopped: TRUE
 returning status FALSE
 got results for task 13
-numValues: 15, numResults: 13, stopped: TRUE
+numValues: 25, numResults: 13, stopped: TRUE
 returning status FALSE
 got results for task 14
-numValues: 15, numResults: 14, stopped: TRUE
+numValues: 25, numResults: 14, stopped: TRUE
 returning status FALSE
 got results for task 15
-numValues: 15, numResults: 15, stopped: TRUE
+numValues: 25, numResults: 15, stopped: TRUE
+returning status FALSE
+got results for task 16
+numValues: 25, numResults: 16, stopped: TRUE
+returning status FALSE
+got results for task 17
+numValues: 25, numResults: 17, stopped: TRUE
+returning status FALSE
+got results for task 18
+numValues: 25, numResults: 18, stopped: TRUE
+returning status FALSE
+got results for task 19
+numValues: 25, numResults: 19, stopped: TRUE
+returning status FALSE
+got results for task 20
+numValues: 25, numResults: 20, stopped: TRUE
+returning status FALSE
+got results for task 21
+numValues: 25, numResults: 21, stopped: TRUE
+returning status FALSE
+got results for task 22
+numValues: 25, numResults: 22, stopped: TRUE
+returning status FALSE
+got results for task 23
+numValues: 25, numResults: 23, stopped: TRUE
+returning status FALSE
+got results for task 24
+numValues: 25, numResults: 24, stopped: TRUE
+returning status FALSE
+got results for task 25
+numValues: 25, numResults: 25, stopped: TRUE
 calling combine function
 evaluating call object to combine results:
   fun(accum, result.1, result.2, result.3, result.4, result.5, 
     result.6, result.7, result.8, result.9, result.10, result.11, 
-    result.12, result.13, result.14, result.15)
+    result.12, result.13, result.14, result.15, result.16, result.17, 
+    result.18, result.19, result.20, result.21, result.22, result.23, 
+    result.24, result.25)
 returning status TRUE
-[1] "Annotation:top_0.5:CLR"
-Directory does not exist -- creating[1] "CHR:1"
-[1] "CHR:2"
-[1] "CHR:3"
-[1] "CHR:4"
-[1] "CHR:5"
-[1] "CHR:6"
-[1] "CHR:7"
-[1] "CHR:8"
-[1] "CHR:9"
-[1] "CHR:10"
-[1] "CHR:11"
-[1] "CHR:12"
-[1] "CHR:13"
-[1] "CHR:14"
-[1] "CHR:15"
-[1] "CHR:16"
-[1] "CHR:17"
-[1] "CHR:18"
-[1] "CHR:19"
-[1] "CHR:20"
-[1] "CHR:21"
-[1] "CHR:22"
-[1] "Annotation:top_0.5:CMS"
-Directory does not exist -- creating[1] "CHR:1"
-[1] "CHR:2"
-[1] "CHR:3"
-[1] "CHR:4"
-[1] "CHR:5"
-[1] "CHR:6"
-[1] "CHR:7"
-[1] "CHR:8"
-[1] "CHR:9"
-[1] "CHR:10"
-[1] "CHR:11"
-[1] "CHR:12"
-[1] "CHR:13"
-[1] "CHR:14"
-[1] "CHR:15"
-[1] "CHR:16"
-[1] "CHR:17"
-[1] "CHR:18"
-[1] "CHR:19"
-[1] "CHR:20"
-[1] "CHR:21"
-[1] "CHR:22"
-[1] "Annotation:top_0.5:IHS"
-Directory does not exist -- creating[1] "CHR:1"
-[1] "CHR:2"
-[1] "CHR:3"
-[1] "CHR:4"
-[1] "CHR:5"
-[1] "CHR:6"
-[1] "CHR:7"
-[1] "CHR:8"
-[1] "CHR:9"
-[1] "CHR:10"
-[1] "CHR:11"
-[1] "CHR:12"
-[1] "CHR:13"
-[1] "CHR:14"
-[1] "CHR:15"
-[1] "CHR:16"
-[1] "CHR:17"
-[1] "CHR:18"
-[1] "CHR:19"
-[1] "CHR:20"
-[1] "CHR:21"
-[1] "CHR:22"
-[1] "Annotation:top_0.5:LA"
-Directory does not exist -- creating[1] "CHR:1"
-[1] "CHR:2"
-[1] "CHR:3"
-[1] "CHR:4"
-[1] "CHR:5"
-[1] "CHR:6"
-[1] "CHR:7"
-[1] "CHR:8"
-[1] "CHR:9"
-[1] "CHR:10"
-[1] "CHR:11"
-[1] "CHR:12"
-[1] "CHR:13"
-[1] "CHR:14"
-[1] "CHR:15"
-[1] "CHR:16"
-[1] "CHR:17"
-[1] "CHR:18"
-[1] "CHR:19"
-[1] "CHR:20"
-[1] "CHR:21"
-[1] "CHR:22"
-[1] "Annotation:top_0.5:XPEEH"
-Directory does not exist -- creating[1] "CHR:1"
-[1] "CHR:2"
-[1] "CHR:3"
-[1] "CHR:4"
-[1] "CHR:5"
-[1] "CHR:6"
-[1] "CHR:7"
-[1] "CHR:8"
-[1] "CHR:9"
-[1] "CHR:10"
-[1] "CHR:11"
-[1] "CHR:12"
-[1] "CHR:13"
-[1] "CHR:14"
-[1] "CHR:15"
-[1] "CHR:16"
-[1] "CHR:17"
-[1] "CHR:18"
-[1] "CHR:19"
-[1] "CHR:20"
-[1] "CHR:21"
-[1] "CHR:22"
+Warning message:
+In dir.create(args$annot_dir, showWarnings = T) :
+  '/home/rreynolds/misc_projects/als-neanderthal-analysis/raw_data/01_annotations/ldsc_annotations' already exists
 [1] "Annotation:top_1:CLR"
 Directory does not exist -- creating[1] "CHR:1"
 [1] "CHR:2"
@@ -744,10 +664,355 @@ Directory does not exist -- creating[1] "CHR:1"
 [1] "CHR:20"
 [1] "CHR:21"
 [1] "CHR:22"
+[1] "Annotation:top_3:CLR"
+Directory does not exist -- creating[1] "CHR:1"
+[1] "CHR:2"
+[1] "CHR:3"
+[1] "CHR:4"
+[1] "CHR:5"
+[1] "CHR:6"
+[1] "CHR:7"
+[1] "CHR:8"
+[1] "CHR:9"
+[1] "CHR:10"
+[1] "CHR:11"
+[1] "CHR:12"
+[1] "CHR:13"
+[1] "CHR:14"
+[1] "CHR:15"
+[1] "CHR:16"
+[1] "CHR:17"
+[1] "CHR:18"
+[1] "CHR:19"
+[1] "CHR:20"
+[1] "CHR:21"
+[1] "CHR:22"
+[1] "Annotation:top_3:CMS"
+Directory does not exist -- creating[1] "CHR:1"
+[1] "CHR:2"
+[1] "CHR:3"
+[1] "CHR:4"
+[1] "CHR:5"
+[1] "CHR:6"
+[1] "CHR:7"
+[1] "CHR:8"
+[1] "CHR:9"
+[1] "CHR:10"
+[1] "CHR:11"
+[1] "CHR:12"
+[1] "CHR:13"
+[1] "CHR:14"
+[1] "CHR:15"
+[1] "CHR:16"
+[1] "CHR:17"
+[1] "CHR:18"
+[1] "CHR:19"
+[1] "CHR:20"
+[1] "CHR:21"
+[1] "CHR:22"
+[1] "Annotation:top_3:IHS"
+Directory does not exist -- creating[1] "CHR:1"
+[1] "CHR:2"
+[1] "CHR:3"
+[1] "CHR:4"
+[1] "CHR:5"
+[1] "CHR:6"
+[1] "CHR:7"
+[1] "CHR:8"
+[1] "CHR:9"
+[1] "CHR:10"
+[1] "CHR:11"
+[1] "CHR:12"
+[1] "CHR:13"
+[1] "CHR:14"
+[1] "CHR:15"
+[1] "CHR:16"
+[1] "CHR:17"
+[1] "CHR:18"
+[1] "CHR:19"
+[1] "CHR:20"
+[1] "CHR:21"
+[1] "CHR:22"
+[1] "Annotation:top_3:LA"
+Directory does not exist -- creating[1] "CHR:1"
+[1] "CHR:2"
+[1] "CHR:3"
+[1] "CHR:4"
+[1] "CHR:5"
+[1] "CHR:6"
+[1] "CHR:7"
+[1] "CHR:8"
+[1] "CHR:9"
+[1] "CHR:10"
+[1] "CHR:11"
+[1] "CHR:12"
+[1] "CHR:13"
+[1] "CHR:14"
+[1] "CHR:15"
+[1] "CHR:16"
+[1] "CHR:17"
+[1] "CHR:18"
+[1] "CHR:19"
+[1] "CHR:20"
+[1] "CHR:21"
+[1] "CHR:22"
+[1] "Annotation:top_3:XPEEH"
+Directory does not exist -- creating[1] "CHR:1"
+[1] "CHR:2"
+[1] "CHR:3"
+[1] "CHR:4"
+[1] "CHR:5"
+[1] "CHR:6"
+[1] "CHR:7"
+[1] "CHR:8"
+[1] "CHR:9"
+[1] "CHR:10"
+[1] "CHR:11"
+[1] "CHR:12"
+[1] "CHR:13"
+[1] "CHR:14"
+[1] "CHR:15"
+[1] "CHR:16"
+[1] "CHR:17"
+[1] "CHR:18"
+[1] "CHR:19"
+[1] "CHR:20"
+[1] "CHR:21"
+[1] "CHR:22"
+[1] "Annotation:top_4:CLR"
+Directory does not exist -- creating[1] "CHR:1"
+[1] "CHR:2"
+[1] "CHR:3"
+[1] "CHR:4"
+[1] "CHR:5"
+[1] "CHR:6"
+[1] "CHR:7"
+[1] "CHR:8"
+[1] "CHR:9"
+[1] "CHR:10"
+[1] "CHR:11"
+[1] "CHR:12"
+[1] "CHR:13"
+[1] "CHR:14"
+[1] "CHR:15"
+[1] "CHR:16"
+[1] "CHR:17"
+[1] "CHR:18"
+[1] "CHR:19"
+[1] "CHR:20"
+[1] "CHR:21"
+[1] "CHR:22"
+[1] "Annotation:top_4:CMS"
+Directory does not exist -- creating[1] "CHR:1"
+[1] "CHR:2"
+[1] "CHR:3"
+[1] "CHR:4"
+[1] "CHR:5"
+[1] "CHR:6"
+[1] "CHR:7"
+[1] "CHR:8"
+[1] "CHR:9"
+[1] "CHR:10"
+[1] "CHR:11"
+[1] "CHR:12"
+[1] "CHR:13"
+[1] "CHR:14"
+[1] "CHR:15"
+[1] "CHR:16"
+[1] "CHR:17"
+[1] "CHR:18"
+[1] "CHR:19"
+[1] "CHR:20"
+[1] "CHR:21"
+[1] "CHR:22"
+[1] "Annotation:top_4:IHS"
+Directory does not exist -- creating[1] "CHR:1"
+[1] "CHR:2"
+[1] "CHR:3"
+[1] "CHR:4"
+[1] "CHR:5"
+[1] "CHR:6"
+[1] "CHR:7"
+[1] "CHR:8"
+[1] "CHR:9"
+[1] "CHR:10"
+[1] "CHR:11"
+[1] "CHR:12"
+[1] "CHR:13"
+[1] "CHR:14"
+[1] "CHR:15"
+[1] "CHR:16"
+[1] "CHR:17"
+[1] "CHR:18"
+[1] "CHR:19"
+[1] "CHR:20"
+[1] "CHR:21"
+[1] "CHR:22"
+[1] "Annotation:top_4:LA"
+Directory does not exist -- creating[1] "CHR:1"
+[1] "CHR:2"
+[1] "CHR:3"
+[1] "CHR:4"
+[1] "CHR:5"
+[1] "CHR:6"
+[1] "CHR:7"
+[1] "CHR:8"
+[1] "CHR:9"
+[1] "CHR:10"
+[1] "CHR:11"
+[1] "CHR:12"
+[1] "CHR:13"
+[1] "CHR:14"
+[1] "CHR:15"
+[1] "CHR:16"
+[1] "CHR:17"
+[1] "CHR:18"
+[1] "CHR:19"
+[1] "CHR:20"
+[1] "CHR:21"
+[1] "CHR:22"
+[1] "Annotation:top_4:XPEEH"
+Directory does not exist -- creating[1] "CHR:1"
+[1] "CHR:2"
+[1] "CHR:3"
+[1] "CHR:4"
+[1] "CHR:5"
+[1] "CHR:6"
+[1] "CHR:7"
+[1] "CHR:8"
+[1] "CHR:9"
+[1] "CHR:10"
+[1] "CHR:11"
+[1] "CHR:12"
+[1] "CHR:13"
+[1] "CHR:14"
+[1] "CHR:15"
+[1] "CHR:16"
+[1] "CHR:17"
+[1] "CHR:18"
+[1] "CHR:19"
+[1] "CHR:20"
+[1] "CHR:21"
+[1] "CHR:22"
+[1] "Annotation:top_5:CLR"
+Directory does not exist -- creating[1] "CHR:1"
+[1] "CHR:2"
+[1] "CHR:3"
+[1] "CHR:4"
+[1] "CHR:5"
+[1] "CHR:6"
+[1] "CHR:7"
+[1] "CHR:8"
+[1] "CHR:9"
+[1] "CHR:10"
+[1] "CHR:11"
+[1] "CHR:12"
+[1] "CHR:13"
+[1] "CHR:14"
+[1] "CHR:15"
+[1] "CHR:16"
+[1] "CHR:17"
+[1] "CHR:18"
+[1] "CHR:19"
+[1] "CHR:20"
+[1] "CHR:21"
+[1] "CHR:22"
+[1] "Annotation:top_5:CMS"
+Directory does not exist -- creating[1] "CHR:1"
+[1] "CHR:2"
+[1] "CHR:3"
+[1] "CHR:4"
+[1] "CHR:5"
+[1] "CHR:6"
+[1] "CHR:7"
+[1] "CHR:8"
+[1] "CHR:9"
+[1] "CHR:10"
+[1] "CHR:11"
+[1] "CHR:12"
+[1] "CHR:13"
+[1] "CHR:14"
+[1] "CHR:15"
+[1] "CHR:16"
+[1] "CHR:17"
+[1] "CHR:18"
+[1] "CHR:19"
+[1] "CHR:20"
+[1] "CHR:21"
+[1] "CHR:22"
+[1] "Annotation:top_5:IHS"
+Directory does not exist -- creating[1] "CHR:1"
+[1] "CHR:2"
+[1] "CHR:3"
+[1] "CHR:4"
+[1] "CHR:5"
+[1] "CHR:6"
+[1] "CHR:7"
+[1] "CHR:8"
+[1] "CHR:9"
+[1] "CHR:10"
+[1] "CHR:11"
+[1] "CHR:12"
+[1] "CHR:13"
+[1] "CHR:14"
+[1] "CHR:15"
+[1] "CHR:16"
+[1] "CHR:17"
+[1] "CHR:18"
+[1] "CHR:19"
+[1] "CHR:20"
+[1] "CHR:21"
+[1] "CHR:22"
+[1] "Annotation:top_5:LA"
+Directory does not exist -- creating[1] "CHR:1"
+[1] "CHR:2"
+[1] "CHR:3"
+[1] "CHR:4"
+[1] "CHR:5"
+[1] "CHR:6"
+[1] "CHR:7"
+[1] "CHR:8"
+[1] "CHR:9"
+[1] "CHR:10"
+[1] "CHR:11"
+[1] "CHR:12"
+[1] "CHR:13"
+[1] "CHR:14"
+[1] "CHR:15"
+[1] "CHR:16"
+[1] "CHR:17"
+[1] "CHR:18"
+[1] "CHR:19"
+[1] "CHR:20"
+[1] "CHR:21"
+[1] "CHR:22"
+[1] "Annotation:top_5:XPEEH"
+Directory does not exist -- creating[1] "CHR:1"
+[1] "CHR:2"
+[1] "CHR:3"
+[1] "CHR:4"
+[1] "CHR:5"
+[1] "CHR:6"
+[1] "CHR:7"
+[1] "CHR:8"
+[1] "CHR:9"
+[1] "CHR:10"
+[1] "CHR:11"
+[1] "CHR:12"
+[1] "CHR:13"
+[1] "CHR:14"
+[1] "CHR:15"
+[1] "CHR:16"
+[1] "CHR:17"
+[1] "CHR:18"
+[1] "CHR:19"
+[1] "CHR:20"
+[1] "CHR:21"
+[1] "CHR:22"
 Warning message:
 The `path` argument of `write_delim()` is deprecated as of readr 1.4.0.
 Please use the `file` argument instead.
 This warning is displayed once every 8 hours.
-Call `lifecycle::last_warnings()` to see where this warning was generated. 
-[1] "2021-09-03 15:17:36 BST"
+Call `lifecycle::last_lifecycle_warnings()` to see where this warning was generated. 
+[1] "2023-01-08 18:22:18 GMT"
 [1] "Done!"

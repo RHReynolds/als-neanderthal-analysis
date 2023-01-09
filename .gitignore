@@ -4,3 +4,4 @@
 .Ruserdata
 *.Rproj
 raw_data/01_annotations/*/
+raw_data/01_annotations/positive_selection_top_n.rds

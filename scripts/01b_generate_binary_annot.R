@@ -18,8 +18,8 @@ args <-
     file_dir = here::here("raw_data", "01_annotations", "positive_selection"),
     top_percent = 
       setNames(
-        object = c(2,1,0.5),
-        nm = str_c("top_", c(2,1,0.5))
+        object = seq_along(c(1:5)),
+        nm = str_c("top_", seq_along(c(1:5)))
       ),
     baseline_model = "97",
     annot_dir = here::here("raw_data", "01_annotations", "ldsc_annotations")
@@ -58,7 +58,7 @@ metric_df <-
 
 # Main --------------------------------------------------------------------
 
-# Create df with top 2%, 1% and 0.05% of SNPs
+# Create df with top % of SNPs
 # Keep tied scores even if this means slightly more SNPs included 
 # (as no way of distinguishing between tied SNPs)
 metric_top_df <- 
